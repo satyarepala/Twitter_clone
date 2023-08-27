@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Profile</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  header {
+    background-color: #007BFF;
+    color: white;
+    padding: 10px;
+    text-align: center;
+  }
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  .profile {
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .profile img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+  }
+  .post {
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  .delete-button {
+    background-color: #FF6347;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+  <header>
+    <h1>User Profile</h1>
+  </header>
+
+  <div class="container">
+    <div class="profile">
+      <img src="profile-picture.jpg" alt="Profile Picture">
+      <h2>John Doe</h2>
+      <p>Front-end Developer</p>
+      <p>Followers: 500 | Following: 300</p>
+    </div>
+
+    <div class="post">
+      <h3>Create a Post</h3>
+      <textarea id="postContent" rows="4" cols="50" placeholder="Write your post..."></textarea>
+      <button id="postButton">Post</button>
+    </div>
+
+    <div id="posts">
+      <h3>Recent Posts</h3>
+      <div class="post">
+        <p>This is a sample post. Lorem ipsum dolor sit amet.</p>
+        <button class="delete-button">Delete</button>
+      </div>
+      <!-- More posts go here -->
+    </div>
+  </div>
+
+  <script>
+    const postButton = document.getElementById("postButton");
+    const postContent = document.getElementById("postContent");
+    const postsContainer = document.getElementById("posts");
+
+    postButton.addEventListener("click", function () {
+      const content = postContent.value.trim();
+      if (content !== "") {
+        const postDiv = document.createElement("div");
+        postDiv.className = "post";
+        postDiv.innerHTML = `
+          <p>${content}</p>
+          <button class="delete-button">Delete</button>
+        `;
+        postsContainer.appendChild(postDiv);
+        postContent.value = "";
+      }
+    });
+
+    postsContainer.addEventListener("click", function (event) {
+      if (event.target.classList.contains("delete-button")) {
+        const post = event.target.parentElement;
+        postsContainer.removeChild(post);
+      }
+    });
+  </script>
+</body>
+</html>
