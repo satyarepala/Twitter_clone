@@ -1,27 +1,26 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from .models import UserProfile, Post
-from .forms import UserProfileForm, PostForm
+from .models import UserProfile
+from .forms import UserProfileForm
 
-@login_required
-def profile(request):
-    user_profile = UserProfile.objects.get(user=request.user)
-    posts = Post.objects.filter(user=request.user)
+@login_required()
+def view_profile(request):
+    user_profile, created = UserProfile.objects.get_or_create(user=request.user)
+
     if request.method == 'POST':
-        post_form = PostForm(request.POST)
-        if post_form.is_valid():
-            new_post = post_form.save(commit=False)
-            new_post.user = request.user
-            new_post.save()
-            return redirect('profile')
+        form = UserProfileForm(request.POST, request.FILES, instance=user_profile)
+        if form.is_valid():
+            form.save()
+            return redirect('profile')  # Redirect to the profile page after saving changes
     else:
-        post_form = PostForm()
+        form = UserProfileForm(instance=user_profile)
 
-    return render(request, 'profileapp/profile.html', {'user_profile': user_profile, 'posts': posts, 'post_form': post_form})
+    return render(request, 'profile.html', {'form': form, 'user_profile': user_profile})
 
-@login_required
-def delete_post(request, post_id):
-    post = Post.objects.get(id=post_id)
-    if post.user == request.user:
-        post.delete()
-    return redirect('profile')
+
+# @login_required
+# def delete_post(request, post_id):
+#     post = Post.objects.get(id=post_id)
+#     if post.user == request.user:
+#         post.delete()
+#     return redirect('profile')
